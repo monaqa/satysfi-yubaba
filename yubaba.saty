@@ -1,0 +1,75 @@
+@require: pervasives
+@require: base/random
+@require: base/list-ext
+
+let-inline ctx \math m = script-guard Latin (embed-math ctx m)
+let-block ctx +p it = line-break true true ctx (read-inline ctx it ++ inline-fil)
+let-inline ctx \textbf it =
+  let ctx = ctx
+      |> set-font Kana (`fonts-noto-serif-cjk-jp:NotoSerifCJKjp-Bold`, 1.0, 0.0)
+      |> set-font HanIdeographic (`fonts-noto-serif-cjk-jp:NotoSerifCJKjp-Bold`, 1.0, 0.0)
+  in
+  read-inline ctx it
+
+let dialogue name name-abbrev =
+  '<
+    +p{
+      湯婆婆「契約書だよ。そこに名前を書きな。」
+    }
+    +p{
+      氏名：#name;
+    }
+    +p{
+      湯婆婆「
+      フン。#name;というのかい。贅沢な名だねえ。
+      今からお前の名前は#name-abbrev;だ。いいかい、#name-abbrev;だよ。
+      分かったら返事をするんだ、#name-abbrev;！
+      」
+    }
+  >
+
+let yubabify ctx name seed =
+  let _ = () |> List.repeat seed |> List.map Random.random in
+  let name-str = extract-string (read-inline ctx name) in
+  let n = string-length name-str in
+  let idx = (Random.random ()) mod n in
+  let char = string-sub name-str idx 1 in
+  embed-string char
+
+let document record =
+  let ctx =
+    get-initial-context 440pt (command \math)
+      |> set-dominant-narrow-script Latin
+      |> set-dominant-wide-script Kana
+      |> set-font Kana (`fonts-noto-serif-cjk-jp:NotoSerifCJKjp-Regular`, 1.0, 0.0)
+      |> set-font HanIdeographic (`fonts-noto-serif-cjk-jp:NotoSerifCJKjp-Regular`, 1.0, 0.0)
+      |> set-language Kana Japanese
+      |> set-language HanIdeographic Japanese
+      |> set-language Latin English
+      |> set-hyphen-penalty 100
+      |> set-font-size 10pt
+      |> set-paragraph-margin 10pt 10pt
+  in
+  let bt = dialogue record#name (yubabify ctx record#name record#seed) in
+  let bb = read-block ctx bt in
+  page-break A4Paper
+    (fun _ -> (| text-origin = (80pt, 100pt); text-height = 630pt; |))
+      (fun _ -> (|
+        header-origin = (0pt, 0pt);
+        header-content = block-nil;
+        footer-origin = (0pt, 0pt);
+        footer-content = block-nil;
+      |))
+        bb
+
+in
+
+document (|
+  name = {荻野千尋};
+  % name = {获野千尋};
+  % name = {𠮷田};
+  % name = {\SATySFi;};
+  % name = {};
+  % name = {\textbf{获野千尋}};
+  seed = 1;
+|)
