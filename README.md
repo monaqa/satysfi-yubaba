@@ -10,3 +10,5 @@ SATySFi でいつでも湯婆婆するためのリポジトリです。
 `opam` / `satyrographos` コマンドで他のパッケージを入れることもできます。
 
 ![yubaba-demo](https://user-images.githubusercontent.com/48883418/101228538-7a284b00-36df-11eb-9ee4-af9af4c3c11a.gif)
+
+※ 上の gif 画像では比較的短時間でビルド出来ていますが、初回ビルド時には5分ほど時間がかかります。
