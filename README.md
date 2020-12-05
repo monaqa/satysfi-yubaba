@@ -9,3 +9,4 @@ SATySFi でいつでも湯婆婆するためのリポジトリです。
 [SATySFi の docker image](https://github.com/amutake/satysfi-docker) を使用しているため、
 `opam` / `satyrographos` コマンドで他のパッケージを入れることもできます。
 
+![yubaba-demo](https://user-images.githubusercontent.com/48883418/101228538-7a284b00-36df-11eb-9ee4-af9af4c3c11a.gif)
